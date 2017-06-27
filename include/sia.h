@@ -182,7 +182,7 @@ void sia_destroy( sias_t*, sia_t** );
  * @brief Write out the graph files of the sias
  *
  * @param sia_t**       pointer to the symbol table of sias
- * @param const char*   name of the sia
+ * @param const char*   output path where the files will be stored
  * @param const char*   format string, either 'gml' or 'graphml'
  */
 void sia_write( sia_t**, const char*, const char* );
