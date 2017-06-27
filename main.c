@@ -18,8 +18,9 @@ int main( int argc, char **argv ) {
     const char* format = NULL;
     FILE* src_smx;
     int c;
-    sia_format_t format_e;
-    sia_t* symbols;
+    sia_t* symbols = NULL;
+
+    igraph_i_set_attribute_table( &igraph_cattribute_table );
 
     while( ( c = getopt( argc, argv, "hvo:f:" ) ) != -1 )
         switch( c ) {
@@ -66,12 +67,6 @@ int main( int argc, char **argv ) {
         return -1;
     }
     if( format == NULL ) format = "graphml";
-    if( strcmp( format, "gml" ) == 0 ) format_e = FMT_GML;
-    else if( strcmp( format, "graphml" ) == 0 ) format_e = FMT_GRAPHML;
-    else {
-        printf( "Unknown format '%s'!\n", format );
-        return -1;
-    }
     if( out_path == NULL ) out_path = "./";
     // set flex to read from it instead of defaulting to STDIN    yyin = myfile;
     zzin = src_smx;
@@ -84,12 +79,13 @@ int main( int argc, char **argv ) {
 
     if( sias == NULL ) return -1;
 
-    sia_check( sias, format_e, out_path, &symbols );
+    sia_check( sias, &symbols );
+    sia_write( &symbols, out_path, format );
 
     /* if( zznerrs > 0 ) printf( " Error count: %d\n", zznerrs ); */
 
     // cleanup
-    sia_destroy( sias );
+    sia_destroy( sias, &symbols );
     zzlex_destroy();
 
     return 0;

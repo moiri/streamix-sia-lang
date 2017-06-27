@@ -19,17 +19,6 @@ typedef struct sia_state_s sia_state_t;
 typedef struct sia_states_s sia_states_t;
 typedef struct sia_transition_s sia_transition_t;
 typedef struct sia_transitions_s sia_transitions_t;
-typedef enum sia_format_e sia_format_t;
-
-/**
- * @brief graph formats of the sia
- */
-enum sia_format_e
-{
-    FMT_GRAPHML,    /**< http://graphml.graphdrawing.org/ */
-    FMT_GML         /**< https://en.wikipedia.org/wiki/Graph_Modelling_Language */
-};
-
 
 // STRUCTS --------------------------------------------------------------------
 /**
@@ -40,6 +29,7 @@ struct sia_s
     char*           name;       /**< name of the SIA (hash key) */
     sia_states_t*   states;     /**< ::sia_states_s */
     sia_state_t*    symbols;    /**< ::sia_states_s */
+    igraph_t        g;
     UT_hash_handle  hh;         /**< makes this structure hashable */
 };
 
@@ -126,10 +116,9 @@ sia_transitions_t* sia_add_transition( sia_transition_t*, sia_transitions_t* );
  * Checks for duplicate identifiers and creates a graph for each sia
  *
  * @param sias_t*       a pointer to the list of sia structures
- * @param const char*   name of the sia
  * @param sia_t**       pointer to the symbol table of sias
  */
-void sia_check( sias_t*, sia_format_t, const char*, sia_t** );
+void sia_check( sias_t*, sia_t** );
 
 /**
  * @brief check for duplicate states in a sia
@@ -185,7 +174,16 @@ sia_transition_t* sia_create_transition( char*, const char*, char* );
  * @brief destroy all sia structures and its corresponding sub structures
  *
  * @param sias_t*   pointer to the list of sias
+ * @param sia_t**   pointer to the symbol table of sias
  */
-void sia_destroy( sias_t* );
+void sia_destroy( sias_t*, sia_t** );
 
+/**
+ * @brief Write out the graph files of the sias
+ *
+ * @param sia_t**       pointer to the symbol table of sias
+ * @param const char*   name of the sia
+ * @param const char*   format string, either 'gml' or 'graphml'
+ */
+void sia_write( sia_t**, const char*, const char* );
 #endif /* SIA_H */

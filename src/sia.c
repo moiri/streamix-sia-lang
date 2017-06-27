@@ -41,57 +41,21 @@ sia_transitions_t* sia_add_transition( sia_transition_t* transition,
 }
 
 /******************************************************************************/
-void sia_check( sias_t* sias, sia_format_t format, const char* out_path,
-        sia_t** symbols )
+void sia_check( sias_t* sias, sia_t** symbols )
 {
     sia_t* sia;
-    FILE* out_file;
-    char* out_file_name = NULL;
-    const char* format_str;
-    igraph_i_set_attribute_table( &igraph_cattribute_table );
-    igraph_t g;
-
-    switch( format ) {
-        case FMT_GML:
-            format_str = "gml";
-            break;
-        case FMT_GRAPHML:
-            format_str = "graphml";
-            break;
-    }
 
     while( sias != NULL ) {
         HASH_FIND_STR( *symbols, sias->sia->name, sia );
-        if( sia != NULL ) {
+        if( sia != NULL )
             printf( "ERROR: redefinition of '%s'\n", sias->sia->name );
-            sias = sias->next;
-            continue;
-        }
-        HASH_ADD_STR( *symbols, name, sias->sia );
-        sias->sia->symbols = NULL;
-        igraph_empty( &g, 0, true );
-        sia_check_duplicate( &g, sias->sia->states, &sias->sia->symbols );
-        sia_check_undefined( &g, &sias->sia->symbols );
+        else HASH_ADD_STR( *symbols, name, sias->sia );
+        sia = sias->sia;
+        sia->symbols = NULL;
+        igraph_empty( &sia->g, 0, true );
+        sia_check_duplicate( &sia->g, sia->states, &sia->symbols );
+        sia_check_undefined( &sia->g, &sia->symbols );
 
-        out_file_name = malloc( strlen( out_path ) + strlen( sias->sia->name )
-                + strlen( format_str ) + 3 );
-        sprintf( out_file_name, "%s/%s.%s", out_path, sias->sia->name,
-                format_str );
-        out_file = fopen( out_file_name, "w" );
-        switch( format ) {
-            case FMT_GML:
-                igraph_write_graph_gml( &g, out_file, NULL, "StreamixC" );
-                break;
-            case FMT_GRAPHML:
-                igraph_write_graph_graphml( &g, out_file, 0 );
-                break;
-        }
-        fclose( out_file );
-        free( out_file_name );
-        igraph_cattribute_remove_e( &g, "name" );
-        igraph_cattribute_remove_e( &g, "mode" );
-        igraph_cattribute_remove_e( &g, "label" );
-        igraph_destroy( &g );
         sias = sias->next;
     }
 }
@@ -182,15 +146,20 @@ sia_transition_t* sia_create_transition( char* action , const char* mode,
 }
 
 /******************************************************************************/
-void sia_destroy( sias_t* sias )
+void sia_destroy( sias_t* sias, sia_t** symbols )
 {
     sia_state_t* state;
     sia_state_t* state_tmp;
+    sia_t* sia;
+    sia_t* sia_tmp;
     sias_t* sias_tmp;
     sia_states_t* states;
     sia_states_t* states_tmp;
     sia_transitions_t* transitions;
     sia_transitions_t* transitions_tmp;
+    HASH_ITER(hh, *symbols, sia, sia_tmp) {
+        HASH_DEL( *symbols, sia );
+    }
     while( sias != NULL ) {
         states = sias->sia->states;
         HASH_ITER(hh, sias->sia->symbols, state, state_tmp) {
@@ -214,9 +183,43 @@ void sia_destroy( sias_t* sias )
             free( states_tmp );
         }
         free( sias->sia->name );
+        igraph_cattribute_remove_e( &sias->sia->g, "name" );
+        igraph_cattribute_remove_e( &sias->sia->g, "mode" );
+        igraph_cattribute_remove_e( &sias->sia->g, "label" );
+        igraph_cattribute_remove_v( &sias->sia->g, "label" );
+        igraph_destroy( &sias->sia->g );
         free( sias->sia );
         sias_tmp = sias;
         sias = sias->next;
         free( sias_tmp );
+    }
+}
+
+/******************************************************************************/
+void sia_write( sia_t** symbols, const char* out_path, const char* format )
+{
+    FILE* out_file;
+    char* out_file_name = NULL;
+    sia_t* sia;
+    sia_t* tmp;
+
+    HASH_ITER(hh, *symbols, sia, tmp) {
+        out_file_name = malloc( strlen( out_path ) + strlen( sia->name )
+                + strlen( format ) + 3 );
+        sprintf( out_file_name, "%s/%s.%s", out_path, sia->name, format );
+        out_file = fopen( out_file_name, "w" );
+
+        if( strcmp( format, "gml" ) == 0 ) {
+            igraph_write_graph_gml( &sia->g, out_file, NULL, "StreamixC" );
+        }
+        else if( strcmp( format, "graphml" ) == 0 ) {
+            igraph_write_graph_graphml( &sia->g, out_file, 0 );
+        }
+        else {
+            printf( "Unknown format '%s'!\n", format );
+            continue;
+        }
+        fclose( out_file );
+        free( out_file_name );
     }
 }
