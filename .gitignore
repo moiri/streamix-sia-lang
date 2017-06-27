@@ -50,3 +50,14 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# test files
+test
+
+# output files
+*.graphml
+*.gml
+sia2graph
+sia2graph.tab.c
+sia2graph.tab.h
+lex.yy.c
