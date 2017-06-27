@@ -10,7 +10,7 @@ To install the tool type
     make
     sudo make install
 
-Execuatables, libary files and include files will be installed into `/usr/local/bin/`, `/usr/local/lib/` and `/usr/local/include/`, respectively.
+Execuatables will be installed into `/usr/local/bin/`.
 Make sure that `/usr/local/bin/` is in your `PATH` environment variable.
 
 In order to install the tool, the following packages and libraries have to be installed:
@@ -36,7 +36,7 @@ This is used to build depedency graphs. Make sure GraphML is enabled (see http:/
     make check
     sudo make install
 
-## Usage
+## 2. Usage
 
     ./smxc [OPTION...] FILE
 
