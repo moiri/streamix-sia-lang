@@ -9,28 +9,30 @@
 %{
     #include <stdio.h>
     #include "sia2graph.tab.h"  // to get the token types that we return
-    #define YY_DECL extern int yylex()
-    void yyerror ( void** sias, const char* s )
+    #define ZZ_DECL extern int zzlex()
+    void zzerror ( void** sias, const char* s )
     {
-        printf( "%d: %s\n", yylineno, s );
+        printf( "%d: %s\n", zzlineno, s );
     }
 %}
 %option noinput
 %option nounput
 %option yylineno
+%option prefix="zz"
+%option noyywrap
 
 %x comment
 %%
     /* skip whitespaces and CR */
 [ \t]           ;
-\n              ++yylloc.last_line;
+\n              ++zzlloc.last_line;
 
     /* ignore comments */
 "/*"         BEGIN(comment);
 
 <comment>[^*\n]*        /* eat anything that's not a '*' */
 <comment>"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
-<comment>\n             ++yylloc.last_line;
+<comment>\n             ++zzlloc.last_line;
 <comment>"*"+"/"        BEGIN(INITIAL);
 
 "//".*          { /* DO NOTHING */ }
@@ -40,14 +42,14 @@ sia             return KW_SIA;
 
     /* identifiers */
 [a-zA-Z_$][a-zA-Z_$0-9]* {
-                yylval.sval = strdup( yytext );
+                zzlval.sval = strdup( zztext );
                 return IDENTIFIER;
 }
 
     /* operators */
-[.|!?;:{}]     return *yytext;
+[.|!?;:{}]     return *zztext;
 
     /* anything else is an error */
-.               yyerror( NULL, "invalid character" );
+.               zzerror( NULL, "invalid character" );
 %%
 

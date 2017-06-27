@@ -9,14 +9,15 @@
 %{
 /* Prologue */
     #include "sia.h"
-    extern int yylex();
-    extern int yyerror( void*, const char* );
+    extern int zzlex();
+    extern int zzerror( void*, const char* );
 %}
 
 /* Bison declarations */
 %parse-param { void** sias }
 %define parse.error verbose
 %define parse.lac full
+%define api.prefix {zz}
 %locations
 %union {
     int ival;

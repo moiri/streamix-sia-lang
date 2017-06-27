@@ -1,0 +1,9 @@
+/**
+    A simple circular sia with an undefined identifier step4
+*/
+sia a {
+    start: a!.step1 | c!.step3
+    step1: b!.step2
+    step2: d?.step3 | f;.step4  // error: step4 is not defined
+    step3: e?.start
+}

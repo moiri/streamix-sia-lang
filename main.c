@@ -7,10 +7,9 @@
 #include "sia.h"
 
 char* __src_file_name;
-extern FILE *yyin;
-extern FILE *yyout;
-extern int yyparse( void** );
-extern int yylex_destroy();
+extern FILE *zzin;
+extern int zzparse( void** );
+extern int zzlex_destroy();
 
 
 int main( int argc, char **argv ) {
@@ -75,23 +74,23 @@ int main( int argc, char **argv ) {
     }
     if( out_path == NULL ) out_path = "./";
     // set flex to read from it instead of defaulting to STDIN    yyin = myfile;
-    yyin = src_smx;
+    zzin = src_smx;
 
     // parse through the input until there is no more:
     do {
-        yyparse( &sias );
-    } while( !feof( yyin ) );
+        zzparse( &sias );
+    } while( !feof( zzin ) );
     fclose( src_smx );
 
     if( sias == NULL ) return -1;
 
     sia_check( sias, format_e, out_path, &symbols );
 
-    /* if( yynerrs > 0 ) printf( " Error count: %d\n", yynerrs ); */
+    /* if( zznerrs > 0 ) printf( " Error count: %d\n", zznerrs ); */
 
     // cleanup
     sia_destroy( sias );
-    yylex_destroy();
+    zzlex_destroy();
 
     return 0;
 }

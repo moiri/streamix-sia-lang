@@ -1,0 +1,10 @@
+/**
+    A simple circualr SIA with a redefined state step1
+*/
+sia a {
+    start: a!.step1 | c!.step3
+    step1: b!.step2
+    step1: g!.step1 // error: step1 is already defined in line 6
+    step2: d?.step3 | f;.step2
+    step3: e?.start
+}
