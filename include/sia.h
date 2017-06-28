@@ -11,6 +11,7 @@
 
 #include "uthash.h"
 #include "igraph.h"
+#include <stdbool.h>
 
 // TYPEDEFS -------------------------------------------------------------------
 typedef struct sia_s sia_t;
@@ -26,11 +27,13 @@ typedef struct sia_transitions_s sia_transitions_t;
  */
 struct sia_s
 {
-    char*           name;       /**< name of the SIA (hash key) */
+    char*           name;       /**< name of the SIA (hash key for hh_desc) */
+    char*           smx_name;   /**< name of the SIA (hash key for hh_smx) */
     sia_states_t*   states;     /**< ::sia_states_s */
     sia_state_t*    symbols;    /**< ::sia_states_s */
     igraph_t        g;
-    UT_hash_handle  hh;         /**< makes this structure hashable */
+    UT_hash_handle  hh_desc;    /**< makes this structure hashable */
+    UT_hash_handle  hh_smx;     /**< makes this structure hashable */
 };
 
 /**
@@ -69,7 +72,6 @@ struct sia_transition_s
 {
     char*       action;     /**< name of the action */
     const char* mode;       /**< mode of the action */
-    char*       label;
     char*       state;      /**< name of target state */
 };
 
@@ -171,12 +173,58 @@ sia_state_t* sia_create_state( char*, sia_transitions_t* );
 sia_transition_t* sia_create_transition( char*, const char*, char* );
 
 /**
+ * @brief destroy all a sia structure and all its child structures, hash tables
+ * and graphs
+ *
+ * @param sia_t*    pointer to a sia structure
+ */
+void sia_destroy( sia_t* );
+
+/**
+ * @brief destroy the SIA graph and all its attributes
+ *
+ * @param igraph_t* pointer to the SIA graph
+ */
+void sia_destroy_graph( igraph_t* );
+
+/**
+ * @brief destroy all states and transitions of a sia structure
+ *
+ * @param sia_states_t* pointer to a list of states
+ */
+void sia_destroy_states( sia_states_t* );
+
+/**
+ * @brief destroy all symbols in a sia
+ *
+ * @param sia_state_t** pointer to the symbol hashtable of a sia
+ */
+void sia_destroy_state_symbols( sia_state_t** );
+
+/**
+ * @brief Write out the graph file of a sia
+ *
+ * @param sia_t*        pointer to a SIA
+ * @param const char*   name of the SIA
+ * @param const char*   output path where the files will be stored
+ * @param const char*   format string, either 'gml' or 'graphml'
+ */
+void sia_write( sia_t*, const char*, const char*, const char* );
+
+/**
  * @brief destroy all sia structures and its corresponding sub structures
  *
  * @param sias_t*   pointer to the list of sias
  * @param sia_t**   pointer to the symbol table of sias
  */
-void sia_destroy( sias_t*, sia_t** );
+void sias_destroy( sias_t*, sia_t** );
+
+/**
+ * @brief destroy all sia list structures
+ *
+ * @param sias_t*   pointer to the list of sias
+ */
+void sias_destroy_list( sias_t* );
 
 /**
  * @brief Write out the graph files of the sias
@@ -185,5 +233,5 @@ void sia_destroy( sias_t*, sia_t** );
  * @param const char*   output path where the files will be stored
  * @param const char*   format string, either 'gml' or 'graphml'
  */
-void sia_write( sia_t**, const char*, const char* );
+void sias_write( sia_t**, const char*, const char* );
 #endif /* SIA_H */
