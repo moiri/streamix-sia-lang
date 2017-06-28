@@ -67,7 +67,7 @@ int main( int argc, char **argv ) {
         printf( "Cannot open file '%s'!\n", __src_file_name );
         return -1;
     }
-    if( format == NULL ) format = "graphml";
+    if( format == NULL ) format = G_FMT_GRAPHML;
     if( build_path == NULL ) build_path = "./build";
     mkdir( build_path, 0755 );
     // set flex to read from it instead of defaulting to STDIN    yyin = myfile;

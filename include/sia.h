@@ -13,6 +13,20 @@
 #include "igraph.h"
 #include <stdbool.h>
 
+// DEFINES
+
+#define G_SIA_NAME      "name"
+#define G_SIA_PNAME     "pname"
+#define G_SIA_MODE      "mode"
+#define G_SIA_MODE_IN   "?"
+#define G_SIA_MODE_OUT  "!"
+#define G_SIA_MODE_INT  ";"
+
+
+#define G_FMT_GML       "gml"
+#define G_FMT_GRAPHML   "graphml"
+#define G_GML_HEAD      "StreamixC"
+
 // TYPEDEFS -------------------------------------------------------------------
 typedef struct sia_s sia_t;
 typedef struct sias_s sias_t;

@@ -104,8 +104,9 @@ void sia_check_undefined( igraph_t* g, sia_state_t** symbols )
             }
             id = igraph_ecount( g );
             igraph_add_edge( g, state->id, state_tgt->id );
-            igraph_cattribute_EAS_set( g, "name", id, transition->action );
-            igraph_cattribute_EAS_set( g, "mode", id, transition->mode );
+            igraph_cattribute_EAS_set( g, G_SIA_NAME, id, transition->action );
+            igraph_cattribute_EAS_set( g, G_SIA_PNAME, id, transition->action );
+            igraph_cattribute_EAS_set( g, G_SIA_MODE, id, transition->mode );
             transitions = transitions->next;
         }
     }
@@ -157,8 +158,9 @@ void sia_destroy( sia_t* sia )
 /******************************************************************************/
 void sia_destroy_graph( igraph_t* g )
 {
-    igraph_cattribute_remove_e( g, "name" );
-    igraph_cattribute_remove_e( g, "mode" );
+    igraph_cattribute_remove_e( g, G_SIA_NAME );
+    igraph_cattribute_remove_e( g, G_SIA_PNAME );
+    igraph_cattribute_remove_e( g, G_SIA_MODE );
     /* igraph_cattribute_remove_v( &sia->g, "label" ); */
     igraph_destroy( g );
 }
@@ -209,10 +211,10 @@ void sia_write( sia_t* sia, const char* name, const char* out_path,
     sprintf( out_file_name, "%s/%s.%s", out_path, name, format );
     out_file = fopen( out_file_name, "w" );
 
-    if( strcmp( format, "gml" ) == 0 ) {
-        igraph_write_graph_gml( &sia->g, out_file, NULL, "StreamixC" );
+    if( strcmp( format, G_FMT_GML ) == 0 ) {
+        igraph_write_graph_gml( &sia->g, out_file, NULL, G_GML_HEAD );
     }
-    else if( strcmp( format, "graphml" ) == 0 ) {
+    else if( strcmp( format, G_FMT_GRAPHML ) == 0 ) {
         igraph_write_graph_graphml( &sia->g, out_file, 0 );
     }
     else {
