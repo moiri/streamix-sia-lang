@@ -149,20 +149,10 @@ void sia_destroy( sia_t* sia )
 {
     sia_destroy_state_symbols( &sia->symbols );
     sia_destroy_states( sia->states );
-    sia_destroy_graph( &sia->g );
+    igraph_destroy( &sia->g );
     free( sia->name );
     free( sia->smx_name );
     free( sia );
-}
-
-/******************************************************************************/
-void sia_destroy_graph( igraph_t* g )
-{
-    igraph_cattribute_remove_e( g, G_SIA_NAME );
-    igraph_cattribute_remove_e( g, G_SIA_PNAME );
-    igraph_cattribute_remove_e( g, G_SIA_MODE );
-    /* igraph_cattribute_remove_v( &sia->g, "label" ); */
-    igraph_destroy( g );
 }
 
 /******************************************************************************/

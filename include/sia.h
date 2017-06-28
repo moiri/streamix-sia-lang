@@ -195,13 +195,6 @@ sia_transition_t* sia_create_transition( char*, const char*, char* );
 void sia_destroy( sia_t* );
 
 /**
- * @brief destroy the SIA graph and all its attributes
- *
- * @param igraph_t* pointer to the SIA graph
- */
-void sia_destroy_graph( igraph_t* );
-
-/**
  * @brief destroy all states and transitions of a sia structure
  *
  * @param sia_states_t* pointer to a list of states
