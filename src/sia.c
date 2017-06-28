@@ -51,8 +51,6 @@ void sia_check( sias_t* sias, sia_t** symbols )
             printf( "ERROR: redefinition of '%s'\n", sias->sia->name );
         else HASH_ADD_STR( *symbols, name, sias->sia );
         sia = sias->sia;
-        sia->symbols = NULL;
-        igraph_empty( &sia->g, 0, true );
         sia_check_duplicate( &sia->g, sia->states, &sia->symbols );
         sia_check_undefined( &sia->g, &sia->symbols );
 
@@ -119,6 +117,8 @@ sia_t* sia_create( char* name, sia_states_t* states )
     sia_t* sia = malloc( sizeof( struct sia_s ) );
     sia->name = name;
     sia->states = states;
+    sia->symbols = NULL;
+    igraph_empty( &sia->g, 0, true );
     return sia;
 }
 
@@ -207,6 +207,7 @@ void sia_write( sia_t** symbols, const char* out_path, const char* format )
         out_file_name = malloc( strlen( out_path ) + strlen( sia->name )
                 + strlen( format ) + 3 );
         sprintf( out_file_name, "%s/%s.%s", out_path, sia->name, format );
+        /* printf( "Write SIA '%s' to %s\n", sia->name, out_file_name ); */
         out_file = fopen( out_file_name, "w" );
 
         if( strcmp( format, "gml" ) == 0 ) {
