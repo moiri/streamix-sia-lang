@@ -41,7 +41,7 @@
 sia             return KW_SIA;
 
     /* identifiers */
-[a-zA-Z_$][a-zA-Z_$0-9]* {
+[a-zA-Z_$0-9]* {
                 zzlval.sval = strdup( zztext );
                 return IDENTIFIER;
 }
