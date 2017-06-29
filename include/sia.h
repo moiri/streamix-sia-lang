@@ -109,6 +109,18 @@ struct sia_transitions_s
 sias_t* sia_add( sia_t*, sias_t* );
 
 /**
+ * @add an edge to a SIA graph
+ *
+ * @param igraph_t*     pointer to the SIA graph
+ * @param int           source vertex id
+ * @param int           target vertex id
+ * @param const char*   global name of the action
+ * @param const char*   local name of the action
+ * @param const char*   mode of the action
+ */
+void sia_add_edge( igraph_t*, int, int, const char*, const char*, const char* );
+
+/**
  * @brief   Add a state to a list of states and return the list structure.
  *
  * @param sia_state_t*      pointer to the state structure to add

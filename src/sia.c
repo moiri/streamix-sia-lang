@@ -20,6 +20,17 @@ sias_t* sia_add( sia_t* sia, sias_t* list )
 }
 
 /******************************************************************************/
+void sia_add_edge( igraph_t* g, int id_src, int id_dst, const char* smx_id,
+        const char* name, const char* mode )
+{
+    int id_edge = igraph_ecount( g );
+    igraph_add_edge( g, id_src, id_dst );
+    igraph_cattribute_EAS_set( g, G_SIA_NAME, id_edge, smx_id );
+    igraph_cattribute_EAS_set( g, G_SIA_PNAME, id_edge, name );
+    igraph_cattribute_EAS_set( g, G_SIA_MODE, id_edge, mode );
+}
+
+/******************************************************************************/
 sia_states_t* sia_add_state( sia_state_t* state, sia_states_t* list )
 {
     sia_states_t* states = malloc( sizeof( struct sia_states_s ) );
@@ -85,7 +96,6 @@ void sia_check_duplicate( igraph_t* g, sia_states_t* sia,
 /******************************************************************************/
 void sia_check_undefined( igraph_t* g, sia_state_t** symbols )
 {
-    int id;
     sia_state_t* state;
     sia_state_t* tmp;
     sia_state_t* state_tgt;
@@ -103,11 +113,8 @@ void sia_check_undefined( igraph_t* g, sia_state_t** symbols )
                 transitions = transitions->next;
                 continue;
             }
-            id = igraph_ecount( g );
-            igraph_add_edge( g, state->id, state_tgt->id );
-            igraph_cattribute_EAS_set( g, G_SIA_NAME, id, transition->action );
-            igraph_cattribute_EAS_set( g, G_SIA_PNAME, id, transition->action );
-            igraph_cattribute_EAS_set( g, G_SIA_MODE, id, transition->mode );
+            sia_add_edge( g, state->id, state_tgt->id, transition->action,
+                    transition->action, transition->mode );
             transitions = transitions->next;
         }
     }
