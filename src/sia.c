@@ -133,6 +133,14 @@ sia_t* sia_create( char* name, sia_states_t* states )
 }
 
 /******************************************************************************/
+char* sia_create_sia_attr( int vid, int eid )
+{
+    char* smx_id = malloc( 2 * CONST_ID_LEN + 1 );
+    sprintf( smx_id, "%d_%d", vid, eid );
+    return smx_id;
+}
+
+/******************************************************************************/
 sia_state_t* sia_create_state( char* name, sia_transitions_t* transitions )
 {
     sia_state_t* state = malloc( sizeof( struct sia_state_s ) );

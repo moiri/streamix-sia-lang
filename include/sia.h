@@ -22,10 +22,11 @@
 #define G_SIA_MODE_OUT  "!"
 #define G_SIA_MODE_INT  ";"
 
-
 #define G_FMT_GML       "gml"
 #define G_FMT_GRAPHML   "graphml"
 #define G_GML_HEAD      "StreamixC"
+
+#define CONST_ID_LEN    9
 
 // TYPEDEFS -------------------------------------------------------------------
 typedef struct sia_s sia_t;
@@ -178,6 +179,15 @@ void sia_check_undefined( igraph_t*, sia_state_t** );
  * @return sia_t*           pointer to the created structure
  */
 sia_t* sia_create( char*, sia_states_t* );
+
+/**
+ * @brief Creates a unique string to be used as internal action names
+ *
+ * @param int       id if the vertex, the action belongs to
+ * @param int       id of the edge, describing the interaction of the action
+ * @return char*    pointer to a malloced string (must be freed)
+ */
+char* sia_create_sia_attr( int, int );
 
 /**
  * @brief   Create and return a state structure.
