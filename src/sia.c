@@ -42,16 +42,17 @@ sia_transitions_t* sia_add_transition( sia_transition_t* transition,
 /******************************************************************************/
 void sia_check( sias_t* sias, sia_t** symbols )
 {
+    sia_t* sia_tmp;
     sia_t* sia;
 
     while( sias != NULL ) {
-        HASH_FIND( hh_desc, *symbols, sias->sia->name,
-                strlen( sias->sia->name ), sia );
-        if( sia != NULL )
-            printf( "ERROR: redefinition of '%s'\n", sias->sia->name );
-        else HASH_ADD( hh_desc, *symbols, name, strlen( sias->sia->name ),
-                sias->sia );
         sia = sias->sia;
+        HASH_FIND_STR( *symbols, sia->name, sia_tmp );
+        if( sia_tmp != NULL )
+            printf( "ERROR: redefinition of '%s'\n", sia_tmp->name );
+        else {
+            HASH_ADD_STR( *symbols, name, sia );
+        }
         sia_check_duplicate( &sia->g, sia->states, &sia->symbols );
         sia_check_undefined( &sia->g, &sia->symbols );
 
@@ -219,8 +220,8 @@ void sias_destroy( sias_t* sias, sia_t** symbols )
 {
     sia_t* sia;
     sia_t* sia_tmp;
-    HASH_ITER( hh_desc, *symbols, sia, sia_tmp ) {
-        HASH_DELETE( hh_desc, *symbols, sia );
+    HASH_ITER( hh, *symbols, sia, sia_tmp ) {
+        HASH_DEL( *symbols, sia );
         sia_destroy( sia );
     }
     sias_destroy_list( sias );
@@ -244,7 +245,7 @@ void sias_write( sia_t** symbols, const char* out_path,
     sia_t* sia;
     sia_t* tmp;
 
-    HASH_ITER( hh_desc, *symbols, sia, tmp ) {
+    HASH_ITER( hh, *symbols, sia, tmp ) {
         sia_write( sia, sia->name, out_path, format );
     }
 }

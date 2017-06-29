@@ -41,12 +41,12 @@ typedef struct sia_transitions_s sia_transitions_t;
  */
 struct sia_s
 {
-    char*           name;       /**< name of the SIA (hash key for hh_desc) */
+    char*           name;       /**< name of the SIA (hash key for hh) */
     char*           smx_name;   /**< name of the SIA (hash key for hh_smx) */
     sia_states_t*   states;     /**< ::sia_states_s */
     sia_state_t*    symbols;    /**< ::sia_states_s */
     igraph_t        g;
-    UT_hash_handle  hh_desc;    /**< makes this structure hashable */
+    UT_hash_handle  hh;         /**< makes this structure hashable */
     UT_hash_handle  hh_smx;     /**< makes this structure hashable */
 };
 
