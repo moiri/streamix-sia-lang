@@ -133,7 +133,15 @@ sia_t* sia_create( char* name, sia_states_t* states )
 }
 
 /******************************************************************************/
-char* sia_create_sia_attr( int vid, int eid )
+char* sia_create_net_name( int vid )
+{
+    char* smx_id = malloc( 1 * CONST_ID_LEN + 1 );
+    sprintf( smx_id, "_%d", vid );
+    return smx_id;
+}
+
+/******************************************************************************/
+char* sia_create_action_name( int vid, int eid )
 {
     char* smx_id = malloc( 2 * CONST_ID_LEN + 1 );
     sprintf( smx_id, "%d_%d", vid, eid );

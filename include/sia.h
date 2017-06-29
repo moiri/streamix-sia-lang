@@ -187,7 +187,15 @@ sia_t* sia_create( char*, sia_states_t* );
  * @param int       id of the edge, describing the interaction of the action
  * @return char*    pointer to a malloced string (must be freed)
  */
-char* sia_create_sia_attr( int, int );
+char* sia_create_action_name( int, int );
+
+/**
+ * @brief Creates a unique string to be used as internal net names
+ *
+ * @param int       id of the vertex corresponding to the net
+ * @return char*    pointer to a malloced string (must be freed)
+ */
+char* sia_create_net_name( int );
 
 /**
  * @brief   Create and return a state structure.
