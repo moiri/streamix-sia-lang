@@ -28,13 +28,10 @@ This is used for parsing the Streamix code. To install on an apt-based linux sys
     sudo apt install bison
 
 ### 1.3. [`igraph`](http://igraph.org/c/)
-This is used to build depedency graphs. Make sure GraphML is enabled (see http://igraph.org/c/ for details)
+This is used to build depedency graphs.
 
-    cd igraph
-    ./configure
-    make
-    make check
-    sudo make install
+    sudo apt update
+    sudo apt install libigraph0-dev
 
 ## 2. Usage
 

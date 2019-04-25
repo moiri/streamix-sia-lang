@@ -13,7 +13,7 @@ INCLUDES = $(LOC_INC_DIR)/* \
 		   $(PROJECT).tab.h
 
 INCLUDES_DIR = -Iuthash/src \
-			   -I/usr/local/include/igraph \
+			   -I/usr/include/igraph \
 			   -I$(LOC_INC_DIR) \
 			   -I.
 LINK_DIR = -L/usr/local/lib
