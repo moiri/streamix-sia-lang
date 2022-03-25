@@ -45,7 +45,7 @@ lex.zz.c: $(PROJECT).lex $(PROJECT).tab.h
 $(PROJECT).tab.c $(PROJECT).tab.h: $(PROJECT).y
 	bison $(BFLAGS) $(PROJECT).y
 
-.PHONY: clean install
+.PHONY: clean install valgrind
 
 clean:
 	rm -f $(PROJECT).tab.c
@@ -59,3 +59,6 @@ clean:
 install:
 	mkdir -p /usr/local/bin
 	cp -a $(PROJECT) /usr/local/bin/.
+
+valgrind:
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -v ./$(PROJECT)

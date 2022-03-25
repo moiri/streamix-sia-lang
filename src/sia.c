@@ -171,9 +171,9 @@ sia_transition_t* sia_create_transition( char* action , const char* mode,
 /******************************************************************************/
 void sia_destroy( sia_t* sia )
 {
+    igraph_destroy( &sia->g );
     sia_destroy_state_symbols( &sia->symbols );
     sia_destroy_states( sia->states );
-    igraph_destroy( &sia->g );
     free( sia->name );
     free( sia->smx_name );
     free( sia );
