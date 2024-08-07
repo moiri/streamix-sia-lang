@@ -1,3 +1,6 @@
+> :warning: WARNING  
+> This repo was migrated to https://github.com/humdek-unibe-ch/smx-core-sia_lang
+
 # streamix-sia-lang
 A small language to define sias and compile them into a graph file
 
